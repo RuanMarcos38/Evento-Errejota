@@ -15,6 +15,53 @@ Plataforma para centralizar divulgação de eventos, relacionamento, reservas de
 - Métricas de campanha e conversão
 - Guardrails de opt-out, consentimento e frequência
 - Endpoint seguro de campanha com `dry-run` habilitado por padrão
+- Supabase Auth para cadastro/login
+- Banco Supabase multiempresa com RLS
+
+## Supabase — conectado
+
+O módulo Evento Errejota está conectado ao projeto Supabase `iqrnytsgwaiegddfxfjs` usando apenas credenciais públicas no frontend.
+
+URL pública:
+
+`https://iqrnytsgwaiegddfxfjs.supabase.co`
+
+Variáveis:
+
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
+
+Nunca coloque `service_role`, senha do Postgres ou outros segredos em variáveis `NEXT_PUBLIC_*`.
+
+### Isolamento do módulo
+
+Para não alterar nem misturar dados de outros sistemas existentes no mesmo projeto Supabase, todo o módulo usa prefixo `erj_` e RLS por tenant.
+
+Tabelas:
+
+- `erj_tenants`
+- `erj_members`
+- `erj_events`
+- `erj_contacts`
+- `erj_campaigns`
+- `erj_campaign_recipients`
+- `erj_reservations`
+- `erj_conversations`
+- `erj_messages`
+- `erj_tasks`
+- `erj_integrations`
+- `erj_audit_logs`
+
+### Primeiro acesso
+
+1. Abra o SaaS.
+2. Use a tela de cadastro para criar o usuário administrador.
+3. Confirme o e-mail se o Supabase Auth solicitar.
+4. Entre no sistema.
+5. A função `erj_bootstrap_tenant` cria automaticamente o workspace `Errejota` e vincula o primeiro usuário como `owner`.
+6. As políticas RLS passam a liberar somente os dados desse tenant.
+
+A função de bootstrap não pode ser executada pelo papel `anon`; somente usuários autenticados podem chamá-la.
 
 ## Estratégia operacional
 
@@ -66,9 +113,16 @@ Por padrão a rota roda como `dry-run` e apenas retorna quem seria elegível ou 
 
 O lote é limitado a 50 contatos por chamada; volumes maiores devem passar por uma fila/worker com controle de velocidade e retentativas.
 
+## Health check
+
+`GET /api/health`
+
+Retorna o estado de configuração do Supabase, WhatsApp, Instagram, IA e banco server-side/worker.
+
 ## Rodar localmente
 
 ```bash
+cp .env.example .env.local
 npm install
 npm run dev
 ```
@@ -77,14 +131,14 @@ Abra `http://localhost:3000`.
 
 ## Próximas etapas de produção
 
-1. Conectar Supabase/Postgres multiempresa com RLS.
-2. Criar autenticação, usuários e permissões.
-3. Criar Meta App e conectar WhatsApp Business + Instagram profissional.
-4. Cadastrar webhooks dos dois canais.
-5. Aprovar templates de marketing do WhatsApp.
-6. Persistir campanhas, contatos, conversas, reservas e auditoria.
-7. Adicionar fila de jobs para campanhas e follow-up.
-8. Configurar domínio e deploy.
+1. Criar o primeiro usuário administrador pelo próprio SaaS.
+2. Cadastrar o primeiro evento real.
+3. Importar contatos com origem e consentimento.
+4. Criar Meta App e conectar WhatsApp Business + Instagram profissional.
+5. Cadastrar webhooks dos dois canais.
+6. Aprovar templates de marketing do WhatsApp.
+7. Adicionar fila de jobs para campanhas e follow-up em maior volume.
+8. Configurar domínio e deploy de produção.
 
 ## Princípio de operação
 
