@@ -21,7 +21,7 @@ function requireEnv(name: string) {
 export async function sendWhatsAppTemplate(input: WhatsAppTemplateInput) {
   const token = requireEnv("WHATSAPP_ACCESS_TOKEN");
   const phoneNumberId = requireEnv("WHATSAPP_PHONE_NUMBER_ID");
-  const version = process.env.WHATSAPP_GRAPH_VERSION || "v23.0";
+  const version = process.env.WHATSAPP_GRAPH_VERSION || "v26.0";
 
   const components = input.bodyParameters?.length
     ? [{
@@ -57,7 +57,7 @@ export async function sendWhatsAppTemplate(input: WhatsAppTemplateInput) {
 export async function sendInstagramText(input: InstagramTextInput) {
   const token = requireEnv("INSTAGRAM_ACCESS_TOKEN");
   const accountId = requireEnv("INSTAGRAM_ACCOUNT_ID");
-  const version = process.env.INSTAGRAM_GRAPH_VERSION || "v23.0";
+  const version = process.env.INSTAGRAM_GRAPH_VERSION || "v26.0";
 
   const response = await fetch(`https://graph.instagram.com/${version}/${accountId}/messages`, {
     method: "POST",
