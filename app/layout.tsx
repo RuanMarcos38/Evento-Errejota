@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "./premium.css";
 import { AuthGate } from "./auth-gate";
 
 export const metadata: Metadata = {
