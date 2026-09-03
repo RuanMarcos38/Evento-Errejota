@@ -1,6 +1,6 @@
 "use client";
 
-import type { FormEvent, ReactNode } from "react";
+import type { CSSProperties, FormEvent, ReactNode } from "react";
 import { useEffect, useState } from "react";
 import type { Session } from "@supabase/supabase-js";
 import { ensureErrejotaTenant, getErrejotaSnapshot, type ErrejotaSnapshot } from "@/lib/errejota-data";
@@ -199,7 +199,7 @@ function FullScreenMessage({ title, text }: { title: string; text: string }) {
   );
 }
 
-const styles: Record<string, React.CSSProperties> = {
+const styles: Record<string, CSSProperties> = {
   authPage: {
     minHeight: "100vh",
     display: "grid",
